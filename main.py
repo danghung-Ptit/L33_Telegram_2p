@@ -5,13 +5,30 @@ import requests
 import yaml
 import asyncio
 
+    
 with open("/app/config.yml", "r") as ymlfile:
-    cfg = yaml.load(ymlfile, Loader=yaml.SafeLoader)
+    try:
+        cfg = yaml.load(ymlfile, Loader=yaml.SafeLoader)
+    except yaml.YAMLError as e:
+        print("Lỗi khi mở file config.yml:", e)
+        cfg = None
 
-TELEGRAM_BOT_TOKEN_Infinity2pW3_Bot = cfg['telethon']['TELEGRAM_BOT_TOKEN_Infinity2pW3_Bot']
-TELEGRAM_CHAT_ID_Javis_2p_w3_Online = cfg['telethon']['TELEGRAM_CHAT_ID_Javis_2p_w3_Online']
 
-TELEGRAM_CHAT_ID_Javis_2p_w3 = cfg['telethon']['TELEGRAM_CHAT_ID_Javis_2p_w3']
+if cfg:
+    try:
+        TELEGRAM_BOT_TOKEN_Infinity2pW3_Bot = cfg['telethon']['TELEGRAM_BOT_TOKEN_Infinity2pW3_Bot']
+        TELEGRAM_CHAT_ID_Javis_2p_w3_Online = cfg['telethon']['TELEGRAM_CHAT_ID_Javis_2p_w3_Online']
+        TELEGRAM_CHAT_ID_Javis_2p_w3 = cfg['telethon']['TELEGRAM_CHAT_ID_Javis_2p_w3']
+    except KeyError as e:
+        print("Không tìm thấy key trong file config.yml:", e)
+        TELEGRAM_BOT_TOKEN_Infinity2pW3_Bot = None
+        TELEGRAM_CHAT_ID_Javis_2p_w3_Online = None
+        TELEGRAM_CHAT_ID_Javis_2p_w3 = None
+else:
+    TELEGRAM_BOT_TOKEN_Infinity2pW3_Bot = None
+    TELEGRAM_CHAT_ID_Javis_2p_w3_Online = None
+    TELEGRAM_CHAT_ID_Javis_2p_w3 = None
+    
 
 
 
@@ -23,26 +40,30 @@ def get_data():
     }
     try:
         response = requests.post(url, json=data)
-        response.raise_for_status()  # Kiểm tra lỗi yêu cầu HTTP
+        response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
-        # Xử lý lỗi yêu cầu HTTP
         print("Lỗi yêu cầu HTTP:", e)
         return None
     except requests.exceptions.JSONDecodeError as e:
-        # Xử lý lỗi phân tích phản hồi JSON
         print("Lỗi phân tích phản hồi JSON:", e)
         return None
     except Exception as e:
-        # Xử lý các lỗi khác
         print("Lỗi không xác định:", e)
         return None
     
-
-
+    
+    
 async def send_notification(notification_message, chat_id):
+    if not TELEGRAM_BOT_TOKEN_Infinity2pW3_Bot:
+        print("Không tìm thấyvkhóa API Telegram trong file config.yml.")
+        return
+    
     telegram_bot = Bot(token=TELEGRAM_BOT_TOKEN_Infinity2pW3_Bot)
-    await telegram_bot.send_message(chat_id=chat_id, text=notification_message, parse_mode="Markdown")
+    try:
+        await telegram_bot.send_message(chat_id=chat_id, text=notification_message, parse_mode="Markdown")
+    except Exception as e:
+        print("Lỗi khi gửi tin nhắn Telegram:", e)
 
 
 def send_messenger_notification(option, issue, prediction, time, wrong_predictions):
@@ -53,9 +74,10 @@ def send_messenger_notification(option, issue, prediction, time, wrong_predictio
 count_big_small_wrong_predictions = 0
 count_even_odd_wrong_predictions = 0
 wrongs = 3
+
 async def main():
     global count_big_small_wrong_predictions, count_even_odd_wrong_predictions
-    await asyncio.sleep(5)
+    await asyncio.sleep(6)
     response = get_data()
     
     if response is None:
