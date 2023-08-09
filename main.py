@@ -56,7 +56,7 @@ def get_data():
     
 async def send_notification(notification_message, chat_id):
     if not TELEGRAM_BOT_TOKEN_Infinity2pW3_Bot:
-        print("Không tìm thấyvkhóa API Telegram trong file config.yml.")
+        print("Không tìm thấy khóa API Telegram trong file config.yml.")
         return
     
     telegram_bot = Bot(token=TELEGRAM_BOT_TOKEN_Infinity2pW3_Bot)
@@ -77,7 +77,7 @@ wrongs = 3
 
 async def main():
     global count_big_small_wrong_predictions, count_even_odd_wrong_predictions
-    await asyncio.sleep(6)
+    await asyncio.sleep(8)
     response = get_data()
     
     if response is None:
@@ -90,6 +90,9 @@ async def main():
         big_small_prediction = response['predict']['big_small']['prediction']
         even_odd_prediction = response['predict']['even_odd']['prediction']
         time = response['time']
+        
+        point_BS = int(response['point']['big_small'])
+        point_EO = int(response['point']['even_odd'])
     
         message = f"MB2\\_{str(issue)[-3:]} {time.split()[1][:5]} | {big_small_prediction}-{big_small_wrong_predictions} | {even_odd_prediction}-{even_odd_wrong_predictions}"
     
