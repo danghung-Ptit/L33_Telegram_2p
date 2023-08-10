@@ -19,15 +19,18 @@ if cfg:
         TELEGRAM_BOT_TOKEN_Infinity2pW3_Bot = cfg['telethon']['TELEGRAM_BOT_TOKEN_Infinity2pW3_Bot']
         TELEGRAM_CHAT_ID_Javis_2p_w3_Online = cfg['telethon']['TELEGRAM_CHAT_ID_Javis_2p_w3_Online']
         TELEGRAM_CHAT_ID_Javis_2p_w3 = cfg['telethon']['TELEGRAM_CHAT_ID_Javis_2p_w3']
+        TELEGRAM_CHAT_ID_Javis_2p_w3_Online_vip = cfg['telethon']['TELEGRAM_CHAT_ID_Javis_2p_w3_Online_vip']
     except KeyError as e:
         print("Không tìm thấy key trong file config.yml:", e)
         TELEGRAM_BOT_TOKEN_Infinity2pW3_Bot = None
         TELEGRAM_CHAT_ID_Javis_2p_w3_Online = None
         TELEGRAM_CHAT_ID_Javis_2p_w3 = None
+        TELEGRAM_CHAT_ID_Javis_2p_w3_Online_vip = None
 else:
     TELEGRAM_BOT_TOKEN_Infinity2pW3_Bot = None
     TELEGRAM_CHAT_ID_Javis_2p_w3_Online = None
     TELEGRAM_CHAT_ID_Javis_2p_w3 = None
+    TELEGRAM_CHAT_ID_Javis_2p_w3_Online_vip = None
     
 
 
@@ -90,10 +93,32 @@ async def main():
         big_small_prediction = response['predict']['big_small']['prediction']
         even_odd_prediction = response['predict']['even_odd']['prediction']
         time = response['time']
-        
+
         point_BS = int(response['point']['big_small'])
         point_EO = int(response['point']['even_odd'])
-    
+
+        if point_BS in [1, 2]:
+            if big_small_prediction == "Small":
+                big_small_prediction_vip1 = "Big"
+            elif big_small_prediction == "Big":
+                big_small_prediction_vip1 = "Small"
+            else:
+                big_small_prediction_vip1 = big_small_prediction
+
+            messagevip1_BS = f"P_BS: {point_BS} {big_small_prediction_vip1}-{big_small_prediction}"
+            await send_notification(messagevip1_BS, TELEGRAM_CHAT_ID_Javis_2p_w3_Online_vip)
+
+        if point_EO in [1, 2]:
+            if even_odd_prediction == "Even":
+                even_odd_prediction_vip1 = "Odd"
+            elif even_odd_prediction == "Odd":
+                even_odd_prediction_vip1 = "Even"
+            else:
+                even_odd_prediction_vip1 = even_odd_prediction
+
+            messagevip1_EO = f"P_EO: {point_EO} {even_odd_prediction_vip1}-{even_odd_prediction}"
+            await send_notification(messagevip1_EO, TELEGRAM_CHAT_ID_Javis_2p_w3_Online_vip)
+
         message = f"MB2\\_{str(issue)[-3:]} {time.split()[1][:5]} | {big_small_prediction}-{big_small_wrong_predictions} | {even_odd_prediction}-{even_odd_wrong_predictions}"
     
         await send_notification(message, TELEGRAM_CHAT_ID_Javis_2p_w3_Online)
