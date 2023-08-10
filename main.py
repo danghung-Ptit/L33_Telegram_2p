@@ -105,7 +105,7 @@ async def main():
             elif big_small_prediction == "Big":
                 big_small_prediction_vip1 = "Small"
 
-            messagevip1_BS = f"P\\_BS: {point_BS} {big_small_prediction_vip1}-{big_small_prediction}"
+            messagevip1_BS = f"MB2\\_{str(issue)[-3:]} {time.split()[1][:5]} | {point_BS} | {big_small_prediction_vip1} | {big_small_prediction}"
             await send_notification(messagevip1_BS, TELEGRAM_CHAT_ID_Javis_2p_w3_Online_vip)
 
         if point_EO in [1, 2]:
@@ -116,7 +116,8 @@ async def main():
             elif even_odd_prediction == "Odd":
                 even_odd_prediction_vip1 = "Even"
 
-            messagevip1_EO = f"P\\_EO: {point_EO} {even_odd_prediction_vip1}-{even_odd_prediction}"
+
+            messagevip1_EO = f"MB2\\_{str(issue)[-3:]} {time.split()[1][:5]} | {point_EO} | {even_odd_prediction_vip1} | {even_odd_prediction}"
             await send_notification(messagevip1_EO, TELEGRAM_CHAT_ID_Javis_2p_w3_Online_vip)
 
         message = f"MB2\\_{str(issue)[-3:]} {time.split()[1][:5]} | {big_small_prediction}-{big_small_wrong_predictions} | {even_odd_prediction}-{even_odd_wrong_predictions}"
