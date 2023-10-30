@@ -87,8 +87,9 @@ async def main():
         message = f"Lỗi yêu cầu HTTP"
         await send_notification(message, TELEGRAM_CHAT_ID_Javis_2p_w3_Online)
     else:
-        big_small_wrong_predictions = response['predict']['big_small']['wrong_predictions']
-        even_odd_wrong_predictions = response['predict']['even_odd']['wrong_predictions']
+        big_small_wrong_predictions = int(response['predict']['big_small']['wrong_predictions'])
+        even_odd_wrong_predictions = int(response['predict']['even_odd']['wrong_predictions'])
+        
         issue = response['issue']
         big_small_prediction = response['predict']['big_small']['prediction']
         even_odd_prediction = response['predict']['even_odd']['prediction']
