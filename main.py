@@ -80,7 +80,7 @@ wrongs = 3
 
 async def main():
     global count_big_small_wrong_predictions, count_even_odd_wrong_predictions
-    await asyncio.sleep(8)
+    await asyncio.sleep(22)
     response = get_data()
     
     if response is None:
